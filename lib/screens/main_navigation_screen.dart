@@ -53,10 +53,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             top: BorderSide(color: AppTheme.border, width: 1),
           ),
         ),
-        child: BottomNavigationBar(
-          currentIndex: _controller.currentTabIndex,
-          onTap: (index) => _controller.setTab(index),
-          backgroundColor: AppTheme.surface,
+        child: SafeArea(
+          top: false,
+          child: BottomNavigationBar(
+            currentIndex: _controller.currentTabIndex,
+            onTap: (index) => _controller.setTab(index),
+            backgroundColor: AppTheme.surface,
           selectedItemColor: AppTheme.primary,
           unselectedItemColor: AppTheme.textMuted,
           type: BottomNavigationBarType.fixed,
@@ -130,6 +132,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 }

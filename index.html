@@ -77,11 +77,19 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    html {
+      height: 100%;
+      height: -webkit-fill-available;
+    }
+
     body {
       font-family: var(--font-sans);
       background-color: #040406;
       color: var(--text);
+      min-height: 100%;
       min-height: 100vh;
+      min-height: 100dvh;
+      min-height: -webkit-fill-available;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -111,7 +119,10 @@
     .app-frame {
       width: 100%;
       max-width: 420px;
+      height: 100%;
       height: 100vh;
+      height: 100dvh;
+      height: -webkit-fill-available;
       background: var(--bg);
       position: relative;
       overflow: hidden;
@@ -121,9 +132,14 @@
     }
 
     @media (min-width: 600px) {
+      body {
+        padding: 16px 0;
+        box-sizing: border-box;
+      }
       .app-frame {
         height: 890px;
-        max-height: 94vh;
+        max-height: calc(100vh - 32px);
+        max-height: calc(100dvh - 32px);
         border-radius: 44px;
         border: 10px solid #1a1a22;
         box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 40px rgba(255, 106, 0, 0.15);
@@ -244,11 +260,12 @@
 
     /* Container de Telas com Scroll Fluido */
     .screens-container {
-      flex: 1;
+      flex: 1 1 0;
+      min-height: 0;
       overflow-y: auto;
       overflow-x: hidden;
       position: relative;
-      padding-bottom: 84px;
+      padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
     }
 
     .screens-container::-webkit-scrollbar {
@@ -548,7 +565,7 @@
     /* Floating Comanda Bar */
     .floating-comanda-bar {
       position: absolute;
-      bottom: 78px;
+      bottom: calc(80px + env(safe-area-inset-bottom, 0px));
       left: 14px;
       right: 14px;
       background: rgba(22, 22, 30, 0.94);
@@ -975,7 +992,8 @@
       backdrop-filter: blur(20px);
       border-top: 1px solid var(--border);
       padding: 12px 16px;
-      z-index: 30;
+      padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+      z-index: 50;
     }
 
     .btn-primary-large {
@@ -1003,8 +1021,9 @@
 
     /* Bottom Navigation Dock */
     .bottom-nav {
-      height: 72px;
-      background: rgba(14, 14, 18, 0.94);
+      height: calc(72px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      background: rgba(14, 14, 18, 0.96);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-top: 1px solid var(--border);
