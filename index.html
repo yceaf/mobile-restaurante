@@ -1515,8 +1515,8 @@
       <span id="toastMsg">Mensagem</span>
     </div>
 
-    <!-- Header Superior (Top App Bar) -->
-    <header class="top-header">
+    <!-- Header Superior (Top App Bar - Aparece após Login) -->
+    <header class="top-header" id="mainTopHeader" style="display: none;">
       <div class="brand-section-header" onclick="switchTab(0)">
         <div class="brand-icon-flame">
           <svg viewBox="0 0 24 24" fill="none">
@@ -2096,8 +2096,8 @@
 
     </main>
 
-    <!-- BOTTOM NAVIGATION DOCK -->
-    <nav class="bottom-nav">
+    <!-- BOTTOM NAVIGATION DOCK (Aparece após Login) -->
+    <nav class="bottom-nav" id="mainBottomNav" style="display: none;">
       <div class="nav-item active" id="navMenu" onclick="switchTab(0)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
         <span>Cardápio</span>
@@ -2462,18 +2462,19 @@
       renderMobileBill();
       initEmberParticles();
 
-      // Verifica se há sessão gravada no navegador
+      // Sempre inicia na tela de Login & Cadastro no começo
+      showAuthScreen();
+
+      // Se houver e-mail previamente salvo, preenche o campo
       try {
         const saved = localStorage.getItem('brasa_user');
         if (saved) {
           const user = JSON.parse(saved);
-          applyUserSession(user, false);
-          return;
+          if (user.email && document.getElementById('loginEmail')) {
+            document.getElementById('loginEmail').value = user.email;
+          }
         }
       } catch (e) {}
-
-      // Se não há usuário logado, apresenta a tela de Login & Cadastro
-      showAuthScreen();
     }
 
     function switchAuthTab(tab) {
@@ -2548,8 +2549,14 @@
 
     function applyUserSession(user, showWelcome = true) {
       currentUser = user;
-      document.getElementById('userAccountIconMob').innerText = user.isGuest ? '🍽️' : user.name[0].toUpperCase();
-      document.querySelector('.bottom-nav').style.display = 'flex';
+      
+      const topHeader = document.getElementById('mainTopHeader');
+      if (topHeader) topHeader.style.display = 'flex';
+      const bottomNav = document.getElementById('mainBottomNav');
+      if (bottomNav) bottomNav.style.display = 'flex';
+
+      const userBtn = document.getElementById('userAccountIconMob');
+      if (userBtn) userBtn.innerText = user.isGuest ? '🍽️' : user.name[0].toUpperCase();
       
       const authScreen = document.getElementById('screenAuth');
       if (authScreen) authScreen.classList.remove('active');
@@ -2557,7 +2564,7 @@
       switchTab(0);
       if (showWelcome) {
         playSound('bell');
-        showToast(`🔥 Bem-vindo, ${user.name}!`);
+        showToast(`🔥 Bem-vindo ao Brasa Viva, ${user.name}!`);
       }
     }
 
@@ -2696,9 +2703,14 @@
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       const authScreen = document.getElementById('screenAuth');
       if (authScreen) authScreen.classList.add('active');
-      document.getElementById('headerTitle').innerText = 'Brasa Viva • Mesa 14';
-      document.querySelector('.bottom-nav').style.display = 'none';
-      document.getElementById('floatingComanda').style.display = 'none';
+      
+      const topHeader = document.getElementById('mainTopHeader');
+      if (topHeader) topHeader.style.display = 'none';
+      const bottomNav = document.getElementById('mainBottomNav');
+      if (bottomNav) bottomNav.style.display = 'none';
+      const floatingComanda = document.getElementById('floatingComanda');
+      if (floatingComanda) floatingComanda.style.display = 'none';
+
       document.querySelector('.screens-container').scrollTo({ top: 0, behavior: 'smooth' });
     }
 
