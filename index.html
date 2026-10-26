@@ -1125,9 +1125,379 @@
       animation: toastIn 0.25s ease-out;
     }
 
-    @keyframes toastIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* ============================================================
+       TELA DE LOGIN E CADASTRO VIP (ESTILO BRASA & FOGO)
+       ============================================================ */
+    .auth-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px 0 24px 0;
+      position: relative;
+    }
+
+    .auth-glow-bg {
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 106, 0, 0.22) 0%, rgba(255, 106, 0, 0) 70%);
+      top: -30px;
+      right: -40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .auth-glow-gold {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(229, 185, 95, 0.16) 0%, rgba(229, 185, 95, 0) 70%);
+      bottom: 20px;
+      left: -40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .auth-brand-logo {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff7a00 0%, #d63b00 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 28px rgba(255, 106, 0, 0.45);
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-brand-logo svg {
+      width: 44px;
+      height: 44px;
+    }
+
+    .auth-title {
+      font-family: var(--font-display);
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-title span {
+      color: var(--primary);
+    }
+
+    .auth-subtitle {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-tabs {
+      display: flex;
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-tab-btn {
+      flex: 1;
+      padding: 10px 14px;
+      border: none;
+      background: transparent;
+      color: var(--text-sub);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+    }
+
+    .auth-tab-btn.active {
+      background: linear-gradient(135deg, #ff6a00 0%, #e65100 100%);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .auth-form-card {
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-field {
+      margin-bottom: 12px;
+    }
+
+    .auth-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    .auth-input-wrapper {
+      display: flex;
+      align-items: center;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0 14px;
+      height: 48px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .auth-input-wrapper:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.2);
+    }
+
+    .auth-input-icon {
+      font-size: 18px;
+      margin-right: 10px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+    }
+
+    .auth-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+    }
+
+    .auth-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .auth-input-toggle {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      font-size: 16px;
+    }
+
+    .auth-row-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0 16px 0;
+      font-size: 12px;
+    }
+
+    .auth-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-sub);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .auth-link {
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .auth-link:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+
+    .auth-btn-primary {
+      width: 100%;
+      height: 48px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ff7a00 0%, #e65100 100%);
+      color: #fff;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px var(--primary-glow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .auth-btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .auth-btn-primary.loading {
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin: 18px 0 14px 0;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .auth-divider span {
+      padding: 0 12px;
+    }
+
+    .auth-social-row {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .auth-social-btn {
+      flex: 1;
+      height: 42px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .auth-social-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
+    }
+
+    .auth-guest-card {
+      width: 100%;
+      background: rgba(26, 26, 36, 0.7);
+      border: 1px dashed var(--border-flame);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: all 0.25s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-guest-card:hover {
+      background: rgba(35, 24, 14, 0.7);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .auth-guest-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 106, 0, 0.15);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .auth-bonus-box {
+      background: rgba(35, 24, 14, 0.6);
+      border: 1px solid var(--border-gold);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 11px;
+      color: var(--gold-light);
+    }
+
+    .auth-security-footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .user-profile-sheet {
+      text-align: left;
+    }
+
+    .user-profile-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .user-avatar-large {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff6a00, #e5b95f);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 800;
     }
   </style>
 </head>
@@ -1164,6 +1534,9 @@
       </div>
 
       <div class="header-actions">
+        <div class="btn-icon-header" id="btnUserAccountMob" onclick="openUserProfileModal()" title="Minha Conta">
+          <span id="userAccountIconMob">👤</span>
+        </div>
         <div class="btn-icon-header" id="btnSoundMobile" onclick="toggleSound()" title="Ativar/Desativar Som">
           <span id="soundIconMob">🔊</span>
         </div>
@@ -1178,9 +1551,161 @@
     <main class="screens-container">
 
       <!-- ========================================================
+           TELA 0: AUTENTICAÇÃO (LOGIN & CADASTRO VIP)
+           ======================================================== -->
+      <section id="screenAuth" class="screen active">
+        <div class="auth-container">
+          <div class="auth-glow-bg"></div>
+          <div class="auth-glow-gold"></div>
+
+          <!-- Mesa Conectada Pill Status -->
+          <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-pill); padding: 5px 14px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px; position: relative; z-index: 1;">
+            <div class="dot-online"></div>
+            <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: var(--gold);">MESA 14 • SALÃO VIP CONECTADO</span>
+          </div>
+
+          <!-- Logotipo Brasa Viva -->
+          <div class="auth-brand-logo">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C9.5 6 7 9 7 13.5C7 16.5 9.2 19 12 19C14.8 19 17 16.5 17 13.5C17 9 14.5 6 12 2Z" fill="#ffffff" />
+              <path d="M12 7C10.8 9 9.5 10.8 9.5 13C9.5 14.4 10.6 15.5 12 15.5C13.4 15.5 14.5 14.4 14.5 13C14.5 10.8 13.2 9 12 7Z" fill="#ffe082" />
+            </svg>
+          </div>
+
+          <div class="auth-title">BRASA <span>VIVA</span></div>
+          <div class="auth-subtitle">STEAKHOUSE • CARDÁPIO & FIDELIDADE</div>
+
+          <!-- Abas: Entrar / Cadastrar -->
+          <div class="auth-tabs">
+            <button id="tabBtnLogin" class="auth-tab-btn active" onclick="switchAuthTab('login')">Entrar na Conta</button>
+            <button id="tabBtnRegister" class="auth-tab-btn" onclick="switchAuthTab('register')">Criar Nova Conta</button>
+          </div>
+
+          <!-- FORMULÁRIO DE LOGIN -->
+          <div id="authFormLogin" class="auth-form-card">
+            <div class="auth-field">
+              <label class="auth-label" for="loginEmail">E-mail ou Telefone</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">✉️</span>
+                <input type="text" id="loginEmail" class="auth-input" placeholder="seuemail@exemplo.com" value="ycaro@brasaviva.com">
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="loginPass">Senha de Acesso</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">🔒</span>
+                <input type="password" id="loginPass" class="auth-input" placeholder="Sua senha secreta" value="123456">
+                <button type="button" class="auth-input-toggle" onclick="togglePassVisibility('loginPass', this)">👁️</button>
+              </div>
+            </div>
+
+            <div class="auth-row-options">
+              <label class="auth-checkbox-label">
+                <input type="checkbox" id="loginRemember" checked style="accent-color: var(--primary);">
+                <span>Lembrar conta</span>
+              </label>
+              <span class="auth-link" onclick="openForgotPassModal()">Esqueceu a senha?</span>
+            </div>
+
+            <button id="btnSubmitLogin" class="auth-btn-primary" onclick="handleWebLogin()">
+              <span>🚀</span>
+              <span id="btnSubmitLoginText">ACESSAR MINHA CONTA</span>
+            </button>
+
+            <div class="auth-divider">
+              <span>OU CONECTE COM</span>
+            </div>
+
+            <div class="auth-social-row">
+              <button class="auth-social-btn" onclick="handleSocialAuth('Google')">
+                <span style="color: #ea4335; font-size: 16px;">G</span> Google
+              </button>
+              <button class="auth-social-btn" onclick="handleSocialAuth('Apple')">
+                <span style="font-size: 15px;"></span> Apple
+              </button>
+            </div>
+          </div>
+
+          <!-- FORMULÁRIO DE CADASTRO -->
+          <div id="authFormRegister" class="auth-form-card" style="display: none;">
+            <div class="auth-field">
+              <label class="auth-label" for="regName">Nome Completo</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">👤</span>
+                <input type="text" id="regName" class="auth-input" placeholder="ex: Ycaro Ferreira">
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="regEmail">E-mail Principal</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">✉️</span>
+                <input type="email" id="regEmail" class="auth-input" placeholder="seu@email.com">
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="regPhone">WhatsApp / Celular</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">📱</span>
+                <input type="tel" id="regPhone" class="auth-input" placeholder="(11) 98765-4321">
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="regPass">Criar Senha de Acesso</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">🔒</span>
+                <input type="password" id="regPass" class="auth-input" placeholder="Mínimo 4 caracteres">
+                <button type="button" class="auth-input-toggle" onclick="togglePassVisibility('regPass', this)">👁️</button>
+              </div>
+            </div>
+
+            <!-- Card Bônus de Fidelidade -->
+            <div class="auth-bonus-box">
+              <span style="font-size: 22px;">🎖️</span>
+              <div>
+                <strong style="color: #ffd54f;">Bônus do Clube Pitmaster:</strong>
+                <div>Ao criar sua conta você já ganha +1 carimbo no seu Passaporte Fidelidade!</div>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+              <label class="auth-checkbox-label" style="font-size: 11px;">
+                <input type="checkbox" id="regTerms" checked style="accent-color: var(--primary);">
+                <span>Concordo com os Termos de Uso e Política de Privacidade do Restaurante</span>
+              </label>
+            </div>
+
+            <button id="btnSubmitRegister" class="auth-btn-primary" onclick="handleWebRegister()">
+              <span>🎁</span>
+              <span id="btnSubmitRegisterText">CADASTRAR E RECEBER BENEFÍCIOS</span>
+            </button>
+          </div>
+
+          <!-- Botão de Convidado Rápido -->
+          <div class="auth-guest-card" onclick="handleGuestAuth()">
+            <div class="auth-guest-icon">🍽️</div>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 800; color: #fff;">Continuar como Convidado da Mesa 14</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Acesse o cardápio e comanda agora sem precisar de senha</div>
+            </div>
+            <span style="color: var(--text-muted); font-size: 16px;">➔</span>
+          </div>
+
+          <div class="auth-security-footer">
+            <span>🛡️</span>
+            <span>Ambiente Seguro • Brasa Viva Gourmet v1.0 • SSL 256-bit</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ========================================================
            TELA 1: CARDÁPIO (Menu Completo + Search + Categories)
            ======================================================== -->
-      <section id="screenMenu" class="screen active">
+      <section id="screenMenu" class="screen">
         
         <!-- Banner Passaporte VIP -->
         <div class="passport-banner" onclick="switchTab(3)">
@@ -1646,6 +2171,65 @@
       </div>
     </div>
 
+    <!-- MODAL ESQUECEU A SENHA -->
+    <div id="modalForgotPass" class="modal-overlay" onclick="closeForgotPassModal()">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div style="width: 38px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px auto;"></div>
+        <div style="font-size: 30px; margin-bottom: 6px;">🔑</div>
+        <div style="font-family:var(--font-display); font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 4px;">Recuperar Acesso</div>
+        <div style="font-size: 12px; color: var(--text-sub); margin-bottom: 16px;">Informe seu e-mail cadastrado para receber o link de redefinição imediato:</div>
+
+        <div class="auth-field" style="text-align: left; margin-bottom: 16px;">
+          <label class="auth-label" for="recoveryEmailInput">Seu E-mail Cadastrado</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">✉️</span>
+            <input type="email" id="recoveryEmailInput" class="auth-input" placeholder="seu@email.com">
+          </div>
+        </div>
+
+        <button class="btn-primary-large" onclick="handleSendPasswordReset()">
+          ENVIAR LINK DE REDEFINIÇÃO
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL PERFIL DO USUÁRIO / SESSÃO -->
+    <div id="modalUserProfile" class="modal-overlay" onclick="closeUserProfileModal()">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div style="width: 38px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px auto;"></div>
+        
+        <div class="user-profile-header">
+          <div class="user-avatar-large" id="modalUserAvatar">👤</div>
+          <div>
+            <div style="font-size: 16px; font-weight: 800; color: #fff;" id="modalUserName">Cliente Convidado</div>
+            <div style="font-size: 12px; color: var(--text-muted);" id="modalUserEmail">convidado@mesa14.local</div>
+            <div style="font-size: 10px; font-weight: 700; color: var(--gold); margin-top: 4px;" id="modalUserBadge">MESA 14 • CONVIDADO</div>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 16px; display: flex; justify-content: space-around; text-align: center;">
+          <div>
+            <div style="font-size: 10px; color: var(--text-muted); font-weight: 700;">CONTA</div>
+            <div style="font-size: 13px; font-weight: 800; color: #fff;" id="modalUserType">VIP</div>
+          </div>
+          <div style="border-left: 1px solid var(--border);"></div>
+          <div>
+            <div style="font-size: 10px; color: var(--text-muted); font-weight: 700;">SELOS PITMASTER</div>
+            <div style="font-size: 13px; font-weight: 800; color: var(--gold);" id="modalUserStamps">7 / 8</div>
+          </div>
+          <div style="border-left: 1px solid var(--border);"></div>
+          <div>
+            <div style="font-size: 10px; color: var(--text-muted); font-weight: 700;">MESA ATIVA</div>
+            <div style="font-size: 13px; font-weight: 800; color: var(--green);">Mesa 14</div>
+          </div>
+        </div>
+
+        <button class="btn-primary-large" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; box-shadow: none;" onclick="handleWebLogout()">
+          🚪 SAIR / TROCAR DE CONTA
+        </button>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -1868,12 +2452,254 @@
       } catch (e) {}
     }
 
+    // Estado de Autenticação / Sessão
+    let currentUser = null;
+
     // Inicialização
     function init() {
       renderDishes(dishes);
       renderStamps();
       renderMobileBill();
       initEmberParticles();
+
+      // Verifica se há sessão gravada no navegador
+      try {
+        const saved = localStorage.getItem('brasa_user');
+        if (saved) {
+          const user = JSON.parse(saved);
+          applyUserSession(user, false);
+          return;
+        }
+      } catch (e) {}
+
+      // Se não há usuário logado, apresenta a tela de Login & Cadastro
+      showAuthScreen();
+    }
+
+    function switchAuthTab(tab) {
+      const btnLogin = document.getElementById('tabBtnLogin');
+      const btnReg = document.getElementById('tabBtnRegister');
+      const formLogin = document.getElementById('authFormLogin');
+      const formReg = document.getElementById('authFormRegister');
+
+      if (tab === 'login') {
+        btnLogin.classList.add('active');
+        btnReg.classList.remove('active');
+        formLogin.style.display = 'block';
+        formReg.style.display = 'none';
+      } else {
+        btnReg.classList.add('active');
+        btnLogin.classList.remove('active');
+        formReg.style.display = 'none';
+        formLogin.style.display = 'none';
+        formReg.style.display = 'block';
+      }
+    }
+
+    function togglePassVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerText = '🙈';
+      } else {
+        input.type = 'password';
+        btn.innerText = '👁️';
+      }
+    }
+
+    function openForgotPassModal() {
+      const email = document.getElementById('loginEmail').value.trim();
+      if (email) document.getElementById('recoveryEmailInput').value = email;
+      document.getElementById('modalForgotPass').classList.add('active');
+    }
+
+    function closeForgotPassModal() {
+      document.getElementById('modalForgotPass').classList.remove('active');
+    }
+
+    function handleSendPasswordReset() {
+      const email = document.getElementById('recoveryEmailInput').value.trim();
+      if (!email || !email.includes('@')) {
+        showToast('⚠️ Informe um e-mail válido para recuperação!');
+        return;
+      }
+      closeForgotPassModal();
+      playSound('chime');
+      showToast(`📧 Link de recuperação enviado para ${email}!`);
+    }
+
+    function openUserProfileModal() {
+      if (!currentUser) {
+        showAuthScreen();
+        return;
+      }
+      document.getElementById('modalUserName').innerText = currentUser.name;
+      document.getElementById('modalUserEmail').innerText = currentUser.email;
+      document.getElementById('modalUserBadge').innerText = currentUser.isGuest ? 'MESA 14 • CONVIDADO' : 'CLIENTE VIP • FIDELIDADE';
+      document.getElementById('modalUserType').innerText = currentUser.isGuest ? 'CONVIDADO' : 'VIP BRASA';
+      document.getElementById('modalUserStamps').innerText = `${currentStamps} / 8`;
+      document.getElementById('modalUserAvatar').innerText = currentUser.isGuest ? '🍽️' : (currentUser.name ? currentUser.name[0].toUpperCase() : '👤');
+      document.getElementById('modalUserProfile').classList.add('active');
+    }
+
+    function closeUserProfileModal() {
+      document.getElementById('modalUserProfile').classList.remove('active');
+    }
+
+    function applyUserSession(user, showWelcome = true) {
+      currentUser = user;
+      document.getElementById('userAccountIconMob').innerText = user.isGuest ? '🍽️' : user.name[0].toUpperCase();
+      document.querySelector('.bottom-nav').style.display = 'flex';
+      
+      const authScreen = document.getElementById('screenAuth');
+      if (authScreen) authScreen.classList.remove('active');
+      
+      switchTab(0);
+      if (showWelcome) {
+        playSound('bell');
+        showToast(`🔥 Bem-vindo, ${user.name}!`);
+      }
+    }
+
+    function handleWebLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPass').value.trim();
+      const remember = document.getElementById('loginRemember').checked;
+
+      if (!email) {
+        showToast('⚠️ Informe seu e-mail ou usuário!');
+        return;
+      }
+      if (!pass) {
+        showToast('⚠️ Digite sua senha de acesso!');
+        return;
+      }
+
+      const btn = document.getElementById('btnSubmitLogin');
+      const text = document.getElementById('btnSubmitLoginText');
+      btn.classList.add('loading');
+      text.innerText = 'CONECTANDO À MESA 14...';
+
+      setTimeout(() => {
+        btn.classList.remove('loading');
+        text.innerText = 'ACESSAR MINHA CONTA';
+
+        const derivedName = email.includes('@') ? email.split('@')[0] : 'Cliente Brasa';
+        const formattedName = derivedName.charAt(0).toUpperCase() + derivedName.slice(1);
+
+        const user = {
+          name: formattedName,
+          email: email,
+          isGuest: false,
+          table: 'Mesa 14'
+        };
+
+        if (remember) {
+          localStorage.setItem('brasa_user', JSON.stringify(user));
+        }
+
+        applyUserSession(user);
+      }, 700);
+    }
+
+    function handleWebRegister() {
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const pass = document.getElementById('regPass').value.trim();
+      const terms = document.getElementById('regTerms').checked;
+
+      if (!name) {
+        showToast('⚠️ Informe seu nome completo!');
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        showToast('⚠️ Informe um e-mail válido!');
+        return;
+      }
+      if (pass.length < 4) {
+        showToast('⚠️ Senha deve conter no mínimo 4 caracteres!');
+        return;
+      }
+      if (!terms) {
+        showToast('⚠️ Aceite os termos para criar sua conta!');
+        return;
+      }
+
+      const btn = document.getElementById('btnSubmitRegister');
+      const text = document.getElementById('btnSubmitRegisterText');
+      btn.classList.add('loading');
+      text.innerText = 'CRIANDO CONTA VIP...';
+
+      setTimeout(() => {
+        btn.classList.remove('loading');
+        text.innerText = 'CADASTRAR E RECEBER BENEFÍCIOS';
+
+        const user = {
+          name: name,
+          email: email,
+          phone: phone,
+          isGuest: false,
+          table: 'Mesa 14'
+        };
+
+        localStorage.setItem('brasa_user', JSON.stringify(user));
+        applyUserSession(user, false);
+        triggerConfettiMobile();
+        playSound('fanfare');
+        showToast(`🎉 Conta criada com sucesso! Bem-vindo, ${name}!`);
+      }, 800);
+    }
+
+    function handleGuestAuth() {
+      const user = {
+        name: 'Convidado Mesa 14',
+        email: 'convidado@mesa14.local',
+        isGuest: true,
+        table: 'Mesa 14'
+      };
+
+      applyUserSession(user);
+      playSound('chime');
+      showToast('Acesso liberado como Convidado da Mesa 14');
+    }
+
+    function handleSocialAuth(provider) {
+      const user = {
+        name: `Cliente ${provider}`,
+        email: `usuario.${provider.toLowerCase()}@exemplo.com`,
+        isGuest: false,
+        table: 'Mesa 14'
+      };
+
+      applyUserSession(user);
+      playSound('bell');
+      showToast(`Autenticado via ${provider} com sucesso!`);
+    }
+
+    function handleWebLogout() {
+      closeUserProfileModal();
+      currentUser = null;
+      localStorage.removeItem('brasa_user');
+      document.getElementById('userAccountIconMob').innerText = '👤';
+      showAuthScreen();
+      playSound('shutter');
+      showToast('Sessão encerrada com sucesso.');
+    }
+
+    function showAuthScreen() {
+      const screens = ['screenMenu', 'screenBill', 'screenCamera', 'screenStamps', 'screenDishDetail'];
+      screens.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const authScreen = document.getElementById('screenAuth');
+      if (authScreen) authScreen.classList.add('active');
+      document.getElementById('headerTitle').innerText = 'Brasa Viva • Mesa 14';
+      document.querySelector('.bottom-nav').style.display = 'none';
+      document.getElementById('floatingComanda').style.display = 'none';
+      document.querySelector('.screens-container').scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function renderDishes(items) {
@@ -1968,6 +2794,11 @@
 
     // Navegação por Abas
     function switchTab(index) {
+      if (!currentUser && index !== 4) {
+        showAuthScreen();
+        return;
+      }
+
       const screens = [
         { id: 'screenMenu', title: 'Cardápio da Brasa', nav: 'navMenu' },
         { id: 'screenBill', title: 'Comanda da Mesa 14', nav: 'navBill' },
@@ -1975,6 +2806,9 @@
         { id: 'screenStamps', title: 'Passaporte Pitmaster', nav: 'navStamps' },
         { id: 'screenDishDetail', title: 'Detalhes do Prato', nav: null }
       ];
+
+      const authScreen = document.getElementById('screenAuth');
+      if (authScreen) authScreen.classList.remove('active');
 
       screens.forEach((s) => {
         const el = document.getElementById(s.id);

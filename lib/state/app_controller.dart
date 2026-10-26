@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import '../models/dish.dart';
 import '../models/bill_item.dart';
 import '../models/stamp.dart';
+import '../models/user_account.dart';
 
 class AppController extends ChangeNotifier {
   static final AppController _instance = AppController._internal();
   factory AppController() => _instance;
   AppController._internal();
+
+  // Estado de Autenticação / Sessão
+  bool isAuthenticated = false;
+  UserAccount? currentUser;
 
   int currentTabIndex = 0;
   String activeCategory = 'Favoritos da Brasa';
@@ -207,4 +212,78 @@ class AppController extends ChangeNotifier {
     rewardClaimed = true;
     notifyListeners();
   }
+
+  // Métodos de Autenticação / Login
+  void login({
+    required String email,
+    required String password,
+    String? name,
+    String tableNumber = 'Mesa 14',
+  }) {
+    final derivedName = (name != null && name.trim().isNotEmpty)
+        ? name.trim()
+        : (email.contains('@') ? email.split('@').first : 'Cliente Brasa');
+    final formattedName = derivedName.isNotEmpty
+        ? '${derivedName[0].toUpperCase()}${derivedName.substring(1)}'
+        : 'Cliente Brasa';
+
+    currentUser = UserAccount(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: formattedName,
+      email: email.trim(),
+      phone: '(11) 98765-4321',
+      tableNumber: tableNumber,
+      isGuest: false,
+      stampsCount: completedStampsCount,
+    );
+    isAuthenticated = true;
+    currentTabIndex = 0;
+    notifyListeners();
+  }
+
+  void loginAsGuest({
+    String name = 'Convidado Mesa 14',
+    String tableNumber = 'Mesa 14',
+  }) {
+    currentUser = UserAccount(
+      id: 'guest_${DateTime.now().millisecondsSinceEpoch}',
+      name: name,
+      email: 'convidado@mesa14.local',
+      tableNumber: tableNumber,
+      isGuest: true,
+      stampsCount: completedStampsCount,
+    );
+    isAuthenticated = true;
+    currentTabIndex = 0;
+    notifyListeners();
+  }
+
+  void register({
+    required String name,
+    required String email,
+    required String password,
+    String phone = '',
+    String tableNumber = 'Mesa 14',
+  }) {
+    currentUser = UserAccount(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: name.trim().isEmpty ? 'Novo Cliente' : name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      tableNumber: tableNumber,
+      isGuest: false,
+      stampsCount: completedStampsCount,
+    );
+    isAuthenticated = true;
+    currentTabIndex = 0;
+    notifyListeners();
+  }
+
+  void logout() {
+    isAuthenticated = false;
+    currentUser = null;
+    currentTabIndex = 0;
+    notifyListeners();
+  }
 }
+
