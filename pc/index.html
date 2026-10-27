@@ -2974,6 +2974,7 @@
       }
 
       document.getElementById('floatingComanda').style.display = (index === 0) ? 'flex' : 'none';
+      if (index === 1) renderMobileBill(); // sempre atualiza comanda ao abrir a aba
       if (index === 2) initMobileWebcam();
       document.querySelector('.screens-container').scrollTo({ top: 0, behavior: 'smooth' });
     }
