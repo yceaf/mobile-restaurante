@@ -1763,7 +1763,7 @@
           </div>
           <div>
             <div style="font-size: 9px; font-weight: 800; color: var(--gold); letter-spacing: 0.8px;">MESA 14 • COMANDA ATIVA</div>
-            <div style="font-size: 12px; font-weight: 700; color: #fff;" id="floatingComandaText">5 itens na mesa • R$ 350,80</div>
+            <div style="font-size: 12px; font-weight: 700; color: #fff;" id="floatingComandaText">0 itens na mesa • R$ 0,00</div>
           </div>
         </div>
         <button class="btn-add" style="padding: 7px 14px; font-size: 11px;" onclick="switchTab(1)">VER CONTA</button>
@@ -2366,14 +2366,8 @@
       { date: 'HOJE', title: 'Mesa 14' }
     ];
 
-    // Itens iniciais da Comanda Mesa 14 (Total R$ 350,80)
-    let mobileComandaItems = [
-      { id: 1, name: 'Costela 12 Horas no Fogo de Chão', qty: 1, price: 119.00, obs: 'Ao ponto, desmanchando', icon: '🍖' },
-      { id: 2, name: 'Chopp Sem-Banha Puro Malte 500ml', qty: 2, price: 16.00, obs: 'Caneca congelada', icon: '🍺' },
-      { id: 3, name: 'Torresmo de Rolo Parrillero', qty: 1, price: 48.90, obs: 'Geleia de pimenta', icon: '🥓' },
-      { id: 4, name: 'Chimarrão Tradicional Gaúcho', qty: 1, price: 38.00, obs: 'Água na temperatura certa', icon: '🌿' },
-      { id: 5, name: 'Feijoada Completa da Casa', qty: 1, price: 89.90, obs: 'Farofa extra inclusa', icon: '🥘' }
-    ];
+    // Comanda Digital da Mesa 14 (Inicia zerada ao entrar pela 1ª vez)
+    let mobileComandaItems = [];
 
     let currentStamps = 7;
     let selectedDish = dishes[0];
@@ -2890,23 +2884,36 @@
       let subtotal = 0;
       let totalQty = 0;
 
-      container.innerHTML = mobileComandaItems.map((item, idx) => {
-        subtotal += item.price * item.qty;
-        totalQty += item.qty;
-        return `
-          <div class="bill-item-row">
-            <div class="item-icon-box">${item.icon || '🥩'}</div>
-            <div class="item-details">
-              <div class="item-name">${item.qty}x ${item.name}</div>
-              <div class="item-sub">${item.obs}</div>
-              <div class="item-time">Entregue na Mesa 14</div>
-            </div>
-            <div>
-              <div class="item-price">R$ ${(item.price * item.qty).toFixed(2).replace('.', ',')}</div>
-            </div>
+      if (mobileComandaItems.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 36px 18px; background: rgba(18, 18, 24, 0.5); border: 1px dashed var(--border); border-radius: var(--radius-lg); margin-bottom: 14px;">
+            <div style="font-size: 38px; margin-bottom: 8px;">🍽️</div>
+            <div style="font-family: var(--font-display); font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 4px;">Sua comanda está zerada</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">Você ainda não pediu nada nesta mesa.<br>Escolha cortes na brasa e bebidas no cardápio!</div>
+            <button class="btn-add" style="margin: 0 auto; padding: 10px 22px; font-size: 12px;" onclick="switchTab(0)">
+              📖 Escolher Pratos no Cardápio
+            </button>
           </div>
         `;
-      }).join('');
+      } else {
+        container.innerHTML = mobileComandaItems.map((item, idx) => {
+          subtotal += item.price * item.qty;
+          totalQty += item.qty;
+          return `
+            <div class="bill-item-row">
+              <div class="item-icon-box">${item.icon || '🥩'}</div>
+              <div class="item-details">
+                <div class="item-name">${item.qty}x ${item.name}</div>
+                <div class="item-sub">${item.obs}</div>
+                <div class="item-time">Entregue na Mesa 14</div>
+              </div>
+              <div>
+                <div class="item-price">R$ ${(item.price * item.qty).toFixed(2).replace('.', ',')}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
 
       const tipAmount = subtotal * (selectedTip / 100);
       const finalTotal = subtotal + tipAmount;
@@ -2917,7 +2924,16 @@
       document.getElementById('tipValTextMobile').innerText = `+ R$ ${tipAmount.toFixed(2).replace('.', ',')}`;
       document.getElementById('totalPriceBillMobile').innerText = `R$ ${finalTotal.toFixed(2).replace('.', ',')}`;
       document.getElementById('pixModalAmountMobile').innerText = `R$ ${finalTotal.toFixed(2).replace('.', ',')}`;
-      document.getElementById('btnPayMobile').innerText = `Pagar R$ ${finalTotal.toFixed(2).replace('.', ',')} & Liberar Câmera`;
+      
+      const payBtn = document.getElementById('btnPayMobile');
+      if (mobileComandaItems.length === 0) {
+        payBtn.innerText = 'Comanda Zerada • Adicione Pratos';
+        payBtn.style.opacity = '0.7';
+      } else {
+        payBtn.innerText = `Pagar R$ ${finalTotal.toFixed(2).replace('.', ',')} & Liberar Câmera`;
+        payBtn.style.opacity = '1';
+      }
+
       document.getElementById('floatingComandaText').innerText = `${totalQty} itens na mesa • R$ ${finalTotal.toFixed(2).replace('.', ',')}`;
     }
 
@@ -3040,6 +3056,11 @@
     }
 
     function processPaymentMobile() {
+      if (mobileComandaItems.length === 0) {
+        playSound('shutter');
+        showToast('⚠️ Sua comanda está zerada! Adicione pratos do cardápio primeiro.');
+        return;
+      }
       const btn = document.getElementById('btnPayMobile');
       btn.innerText = 'Processando Pagamento Seguro...';
       btn.disabled = true;

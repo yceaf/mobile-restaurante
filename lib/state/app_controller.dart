@@ -94,45 +94,8 @@ class AppController extends ChangeNotifier {
     ),
   ];
 
-  // Comanda Digital
-  final List<BillItem> billItems = [
-    const BillItem(
-      id: 'b1',
-      name: '1x Feijoada Completa',
-      quantity: 1,
-      price: 89.90,
-      subtitle: 'Acompanha arroz, couve e farofa',
-      deliveryTime: 'Entregue às 20:05',
-      category: 'Individual',
-    ),
-    const BillItem(
-      id: 'b2',
-      name: '1x Torresmo de Rolo',
-      quantity: 1,
-      price: 58.90,
-      subtitle: 'Com geleia de pimenta da roça',
-      deliveryTime: 'Entregue às 19:55',
-      category: 'Petisco',
-    ),
-    const BillItem(
-      id: 'b3',
-      name: '1x Baião de Dois do Sertão',
-      quantity: 1,
-      price: 74.90,
-      subtitle: 'Queijo coalho tostado & carne de sol',
-      deliveryTime: 'Entregue às 20:12',
-      category: 'Para 2 Pessoas',
-    ),
-    const BillItem(
-      id: 'b4',
-      name: '2x Chopp Puro Malte 500ml',
-      quantity: 2,
-      price: 37.00,
-      subtitle: 'Caneca ultracongelada 500ml',
-      deliveryTime: 'Entregue às 19:48',
-      category: 'R\$ 18,50 cada',
-    ),
-  ];
+  // Comanda Digital — começa vazia quando o cliente abre pela 1ª vez
+  final List<BillItem> billItems = [];
 
   // Estado da Comanda / Pagamento
   double selectedTipPercentage = 12.0; // 0, 10, 12
