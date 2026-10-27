@@ -1586,6 +1586,10 @@
 
           <!-- FORMULÁRIO DE LOGIN -->
           <div id="authFormLogin" class="auth-form-card">
+            <div style="background: rgba(255, 106, 0, 0.08); border: 1px dashed rgba(255, 106, 0, 0.35); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 14px; font-size: 11px; color: var(--gold); display: flex; align-items: center; gap: 8px;">
+              <span>🔑</span>
+              <span>Conta VIP: <strong>ycaro@brasaviva.com</strong> • Senha: <strong>123456</strong></span>
+            </div>
             <div class="auth-field">
               <label class="auth-label" for="loginEmail">E-mail ou Telefone</label>
               <div class="auth-input-wrapper">
@@ -2521,15 +2525,74 @@
       document.getElementById('modalForgotPass').classList.remove('active');
     }
 
+    // ============================================================
+    // BASE DE DADOS DE USUÁRIOS E SENHAS (Validação Real)
+    // ============================================================
+    const DEFAULT_ACCOUNTS = [
+      {
+        name: 'Ycaro Ferreira',
+        email: 'ycaro@brasaviva.com',
+        phone: '(11) 98765-4321',
+        password: '123456',
+        table: 'Mesa 14 VIP'
+      },
+      {
+        name: 'Professor Avaliador',
+        email: 'professor@restaurante.com',
+        phone: '(11) 99999-8888',
+        password: 'admin',
+        table: 'Mesa 14 VIP'
+      }
+    ];
+
+    function getRegisteredAccounts() {
+      try {
+        const stored = localStorage.getItem('brasa_registered_accounts');
+        if (stored) {
+          const list = JSON.parse(stored);
+          if (Array.isArray(list) && list.length > 0) return list;
+        }
+      } catch (e) {}
+      localStorage.setItem('brasa_registered_accounts', JSON.stringify(DEFAULT_ACCOUNTS));
+      return DEFAULT_ACCOUNTS;
+    }
+
+    function saveAccount(acc) {
+      const list = getRegisteredAccounts();
+      const cleanEmail = acc.email.trim().toLowerCase();
+      const idx = list.findIndex(a => a.email.toLowerCase() === cleanEmail);
+      if (idx >= 0) {
+        list[idx] = acc;
+      } else {
+        list.push(acc);
+      }
+      localStorage.setItem('brasa_registered_accounts', JSON.stringify(list));
+    }
+
     function handleSendPasswordReset() {
       const email = document.getElementById('recoveryEmailInput').value.trim();
       if (!email || !email.includes('@')) {
+        playSound('shutter');
         showToast('⚠️ Informe um e-mail válido para recuperação!');
         return;
       }
+      const accounts = getRegisteredAccounts();
+      const acc = accounts.find(a => a.email.toLowerCase() === email.toLowerCase());
       closeForgotPassModal();
+
+      if (!acc) {
+        playSound('shutter');
+        showToast('❌ E-mail não encontrado no cadastro!');
+        return;
+      }
+
+      // Redefine a senha para 123456
+      acc.password = '123456';
+      saveAccount(acc);
       playSound('chime');
-      showToast(`📧 Link de recuperação enviado para ${email}!`);
+      showToast(`🔑 Senha redefinida para "123456"! Faça login agora.`);
+      if (document.getElementById('loginEmail')) document.getElementById('loginEmail').value = acc.email;
+      if (document.getElementById('loginPass')) document.getElementById('loginPass').value = '123456';
     }
 
     function openUserProfileModal() {
@@ -2572,44 +2635,76 @@
     }
 
     function handleWebLogin() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const pass = document.getElementById('loginPass').value.trim();
+      const emailInput = document.getElementById('loginEmail');
+      const passInput = document.getElementById('loginPass');
+      const email = emailInput.value.trim();
+      const pass = passInput.value.trim();
       const remember = document.getElementById('loginRemember').checked;
 
       if (!email) {
+        playSound('shutter');
         showToast('⚠️ Informe seu e-mail ou usuário!');
+        emailInput.focus();
         return;
       }
       if (!pass) {
+        playSound('shutter');
         showToast('⚠️ Digite sua senha de acesso!');
+        passInput.focus();
         return;
       }
 
       const btn = document.getElementById('btnSubmitLogin');
       const text = document.getElementById('btnSubmitLoginText');
       btn.classList.add('loading');
-      text.innerText = 'CONECTANDO À MESA 14...';
+      text.innerText = 'AUTENTICANDO CREDENCIAIS...';
 
       setTimeout(() => {
         btn.classList.remove('loading');
         text.innerText = 'ACESSAR MINHA CONTA';
 
-        const derivedName = email.includes('@') ? email.split('@')[0] : 'Cliente Brasa';
-        const formattedName = derivedName.charAt(0).toUpperCase() + derivedName.slice(1);
+        const accounts = getRegisteredAccounts();
+        const cleanEmail = email.toLowerCase();
+        const account = accounts.find(
+          acc => acc.email.toLowerCase() === cleanEmail || (acc.phone && acc.phone.replace(/\D/g, '') === email.replace(/\D/g, ''))
+        );
 
+        if (!account) {
+          playSound('shutter');
+          showToast('❌ Conta não encontrada! Verifique o e-mail ou crie uma conta.');
+          emailInput.style.borderColor = 'var(--red)';
+          setTimeout(() => emailInput.style.borderColor = '', 2500);
+          return;
+        }
+
+        // VALIDAÇÃO ESTRITA DE SENHA
+        if (account.password !== pass) {
+          playSound('shutter');
+          showToast('❌ Senha incorreta! Digite a senha cadastrada.');
+          passInput.style.borderColor = 'var(--red)';
+          passInput.value = '';
+          passInput.focus();
+          setTimeout(() => passInput.style.borderColor = '', 2500);
+          return; // BLOQUEIA ACESSO IMEDIATAMENTE
+        }
+
+        // Senha correta: faz o login com sucesso
         const user = {
-          name: formattedName,
-          email: email,
+          name: account.name,
+          email: account.email,
+          phone: account.phone || '(11) 98765-4321',
           isGuest: false,
-          table: 'Mesa 14'
+          table: account.table || 'Mesa 14 VIP'
         };
 
         if (remember) {
           localStorage.setItem('brasa_user', JSON.stringify(user));
+        } else {
+          localStorage.removeItem('brasa_user');
         }
 
         applyUserSession(user);
-      }, 700);
+      }, 500);
     }
 
     function handleWebRegister() {
@@ -2620,18 +2715,22 @@
       const terms = document.getElementById('regTerms').checked;
 
       if (!name) {
+        playSound('shutter');
         showToast('⚠️ Informe seu nome completo!');
         return;
       }
       if (!email || !email.includes('@')) {
+        playSound('shutter');
         showToast('⚠️ Informe um e-mail válido!');
         return;
       }
       if (pass.length < 4) {
+        playSound('shutter');
         showToast('⚠️ Senha deve conter no mínimo 4 caracteres!');
         return;
       }
       if (!terms) {
+        playSound('shutter');
         showToast('⚠️ Aceite os termos para criar sua conta!');
         return;
       }
@@ -2645,20 +2744,32 @@
         btn.classList.remove('loading');
         text.innerText = 'CADASTRAR E RECEBER BENEFÍCIOS';
 
+        const newAccount = {
+          name: name,
+          email: email.toLowerCase(),
+          phone: phone || '(11) 98888-7777',
+          password: pass,
+          isGuest: false,
+          table: 'Mesa 14 VIP'
+        };
+
+        // Salva a nova conta com senha no banco de contas local
+        saveAccount(newAccount);
+
         const user = {
           name: name,
           email: email,
           phone: phone,
           isGuest: false,
-          table: 'Mesa 14'
+          table: 'Mesa 14 VIP'
         };
 
         localStorage.setItem('brasa_user', JSON.stringify(user));
         applyUserSession(user, false);
         triggerConfettiMobile();
         playSound('fanfare');
-        showToast(`🎉 Conta criada com sucesso! Bem-vindo, ${name}!`);
-      }, 800);
+        showToast(`🎉 Conta criada com sucesso! Sua senha foi cadastrada.`);
+      }, 600);
     }
 
     function handleGuestAuth() {
@@ -2675,14 +2786,17 @@
     }
 
     function handleSocialAuth(provider) {
-      const user = {
+      const email = `usuario.${provider.toLowerCase()}@exemplo.com`;
+      const socialAccount = {
         name: `Cliente ${provider}`,
-        email: `usuario.${provider.toLowerCase()}@exemplo.com`,
+        email: email,
+        phone: '(11) 99999-0000',
+        password: 'social_login',
         isGuest: false,
-        table: 'Mesa 14'
+        table: 'Mesa 14 VIP'
       };
-
-      applyUserSession(user);
+      saveAccount(socialAccount);
+      applyUserSession(socialAccount);
       playSound('bell');
       showToast(`Autenticado via ${provider} com sucesso!`);
     }

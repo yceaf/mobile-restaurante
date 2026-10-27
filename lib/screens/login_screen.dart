@@ -99,13 +99,17 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     }
 
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(milliseconds: 700));
+    await Future.delayed(const Duration(milliseconds: 600));
 
     if (!mounted) return;
-    // login() chama notifyListeners() → AppAuthWrapper desmonta LoginScreen.
-    // Guardamos o contexto antes de chamar login.
-    _controller.login(email: email, password: password);
-    // Após notifyListeners() o widget pode ter sido desmontado.
+    final error = _controller.login(email: email, password: password);
+    if (error != null) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      _showNotification(error, isError: true);
+      return;
+    }
+    // Sucesso: AppAuthWrapper desmonta LoginScreen automaticamente
     if (!mounted) return;
     setState(() => _isLoading = false);
   }
@@ -162,15 +166,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   Future<void> _handleSocialLogin(String provider) async {
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(milliseconds: 600));
+    await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
-    // login() chama notifyListeners() → AppAuthWrapper desmonta LoginScreen.
-    _controller.login(
-      email: 'usuario.$provider@exemplo.com',
-      password: 'oauth_token',
+    _controller.register(
       name: 'Cliente $provider',
+      email: 'usuario.${provider.toLowerCase()}@exemplo.com',
+      password: 'social_login',
     );
-    // Após notifyListeners() o widget pode ter sido desmontado.
     if (!mounted) return;
     setState(() => _isLoading = false);
   }

@@ -213,25 +213,53 @@ class AppController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Métodos de Autenticação / Login
-  void login({
+  // Lista de Contas Cadastradas (com senha para validação real)
+  final List<Map<String, String>> _registeredAccounts = [
+    {
+      'name': 'Ycaro Ferreira',
+      'email': 'ycaro@brasaviva.com',
+      'phone': '(11) 98765-4321',
+      'password': '123456',
+    },
+    {
+      'name': 'Professor Avaliador',
+      'email': 'professor@restaurante.com',
+      'phone': '(11) 99999-8888',
+      'password': 'admin',
+    },
+  ];
+
+  // Métodos de Autenticação / Login com validação real de senha
+  String? login({
     required String email,
     required String password,
     String? name,
     String tableNumber = 'Mesa 14',
   }) {
-    final derivedName = (name != null && name.trim().isNotEmpty)
-        ? name.trim()
-        : (email.contains('@') ? email.split('@').first : 'Cliente Brasa');
-    final formattedName = derivedName.isNotEmpty
-        ? '${derivedName[0].toUpperCase()}${derivedName.substring(1)}'
-        : 'Cliente Brasa';
+    final cleanEmail = email.trim().toLowerCase();
+    final cleanPass = password.trim();
+
+    // Busca conta correspondente
+    final account = _registeredAccounts.firstWhere(
+      (acc) => acc['email']?.toLowerCase() == cleanEmail || acc['phone'] == cleanEmail,
+      orElse: () => {},
+    );
+
+    if (account.isEmpty) {
+      return 'Conta não encontrada! Verifique o e-mail ou cadastre-se.';
+    }
+
+    if (account['password'] != cleanPass) {
+      return 'Senha incorreta! Digite a senha cadastrada.';
+    }
+
+    final accountName = account['name'] ?? (name != null && name.trim().isNotEmpty ? name.trim() : 'Cliente VIP');
 
     currentUser = UserAccount(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: formattedName,
-      email: email.trim(),
-      phone: '(11) 98765-4321',
+      name: accountName,
+      email: account['email'] ?? cleanEmail,
+      phone: account['phone'] ?? '(11) 98765-4321',
       tableNumber: tableNumber,
       isGuest: false,
       stampsCount: completedStampsCount,
@@ -239,6 +267,7 @@ class AppController extends ChangeNotifier {
     isAuthenticated = true;
     currentTabIndex = 0;
     notifyListeners();
+    return null; // Sucesso
   }
 
   void loginAsGuest({
@@ -265,10 +294,32 @@ class AppController extends ChangeNotifier {
     String phone = '',
     String tableNumber = 'Mesa 14',
   }) {
+    final cleanEmail = email.trim().toLowerCase();
+    final cleanName = name.trim().isEmpty ? 'Novo Cliente' : name.trim();
+    final cleanPass = password.trim();
+
+    // Salva ou atualiza a conta
+    final existingIndex = _registeredAccounts.indexWhere(
+      (acc) => acc['email']?.toLowerCase() == cleanEmail,
+    );
+
+    final newAcc = {
+      'name': cleanName,
+      'email': cleanEmail,
+      'phone': phone.trim(),
+      'password': cleanPass,
+    };
+
+    if (existingIndex >= 0) {
+      _registeredAccounts[existingIndex] = newAcc;
+    } else {
+      _registeredAccounts.add(newAcc);
+    }
+
     currentUser = UserAccount(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: name.trim().isEmpty ? 'Novo Cliente' : name.trim(),
-      email: email.trim(),
+      name: cleanName,
+      email: cleanEmail,
       phone: phone.trim(),
       tableNumber: tableNumber,
       isGuest: false,
@@ -277,6 +328,18 @@ class AppController extends ChangeNotifier {
     isAuthenticated = true;
     currentTabIndex = 0;
     notifyListeners();
+  }
+
+  bool resetPassword(String email, String newPassword) {
+    final cleanEmail = email.trim().toLowerCase();
+    final existingIndex = _registeredAccounts.indexWhere(
+      (acc) => acc['email']?.toLowerCase() == cleanEmail,
+    );
+    if (existingIndex >= 0) {
+      _registeredAccounts[existingIndex]['password'] = newPassword;
+      return true;
+    }
+    return false;
   }
 
   void logout() {
